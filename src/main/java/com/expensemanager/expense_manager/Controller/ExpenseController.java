@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.expensemanager.expense_manager.Entity.Expense;
+import com.expensemanager.expense_manager.DTO.ExpenseRequest;
+import com.expensemanager.expense_manager.DTO.ExpenseResponse;
 import com.expensemanager.expense_manager.Service.ExpenseService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -26,24 +29,24 @@ public class ExpenseController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Expense> createExpense(@RequestBody Expense expense) {
-		Expense createdExpense = expenseService.createExpense(expense);
+	public ResponseEntity<ExpenseResponse> createExpense(@Valid @RequestBody ExpenseRequest request) {
+		ExpenseResponse createdExpense = expenseService.createExpense(request);
 
 		return new ResponseEntity<>(createdExpense, HttpStatus.CREATED);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Expense>> getAllExpenses() {
-		List<Expense> expenses = expenseService.getAllExpenses();
+	public ResponseEntity<List<ExpenseResponse>> getAllExpenses() {
+		List<ExpenseResponse> expenses = expenseService.getAllExpenses();
 
-		return new ResponseEntity<>(expenses,HttpStatus.OK);
+		return new ResponseEntity<>(expenses, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
-		Expense expense = expenseService.getExpenseById(id);
+	public ResponseEntity<ExpenseResponse> getExpenseById(@PathVariable Long id) {
+		ExpenseResponse expense = expenseService.getExpenseById(id);
 
-		return new ResponseEntity<>(expense,HttpStatus.OK);
+		return new ResponseEntity<>(expense, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
