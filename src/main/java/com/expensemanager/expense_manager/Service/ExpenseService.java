@@ -2,11 +2,13 @@ package com.expensemanager.expense_manager.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.expensemanager.expense_manager.DTO.ExpenseRequest;
 import com.expensemanager.expense_manager.DTO.ExpenseResponse;
 import com.expensemanager.expense_manager.Entity.Expense;
+import com.expensemanager.expense_manager.Exception.ResourceNotFoundException;
 import com.expensemanager.expense_manager.Repository.ExpenseRepository;
 
 @Service
@@ -40,11 +42,14 @@ public class ExpenseService {
 
 	public ExpenseResponse getExpenseById(Long id) {
 		Expense expense = expenseRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Expense not found with id: " + id));
+				.orElseThrow(() -> new ResourceNotFoundException("Expense not found with id: " + id));
 		return toResponse(expense);
 	}
 
 	public void deleteExpense(Long id) {
+		if (!expenseRepository.existsById(id)) {
+			throw new ResourceNotFoundException("Expense not found with id: " + id);
+		}
 		expenseRepository.deleteById(id);
 	}
 
